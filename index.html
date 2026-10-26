@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Resmi Situasi & Rekapitulasi UPT - Kanwil Ditjenpas Kalteng</title>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-blue: #1e3a8a;
+      --accent-gold: #d97706;
+      --border-color: #cbd5e1;
+      --bg-body: #f8fafc;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --success-bg: #dcfce7;
+      --success-text: #15803d;
+      --info-bg: #dbeafe;
+      --info-text: #1d4ed8;
+      --warn-bg: #fef3c7;
+      --warn-text: #b45309;
+      --danger-bg: #fee2e2;
+      --danger-text: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    .rekap-wrapper {
+      max-width: 1480px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    /* Header Resmi Kanwil Ditjenpas Kalteng */
+    .rekap-header {
+      background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 26px 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 5px solid var(--accent-gold);
+    }
+
+    .instansi-badge {
+      display: inline-block;
+      background: rgba(217, 119, 6, 0.22);
+      border: 1px solid var(--accent-gold);
+      color: #fde68a;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .rekap-header h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .update-banner {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      font-weight: 600;
+      border-left: 4px solid var(--accent-gold);
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: #f8fafc;
+    }
+
+    .sync-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .sync-dot.loading {
+      background-color: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+      animation: pulse 1s infinite;
+    }
+
+    .sync-dot.error {
+      background-color: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    /* Bar Konfigurasi Link Spreadsheet */
+    .config-bar {
+      background: #f1f5f9;
+      padding: 12px 30px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .config-bar input {
+      flex: 1;
+      min-width: 280px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    /* Panel Kustomisasi Laporan Harian (WBP & Situasi Menonjol) */
+    .custom-report-container {
+      background: #eff6ff;
+      border-bottom: 1px solid #cbd5e1;
+      padding: 20px 30px;
+    }
+
+    .custom-report-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--primary-blue);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.4px;
+    }
+
+    .custom-report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .report-card {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.05);
+    }
+
+    .report-card label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--primary-blue);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
+    }
+
+    .report-card input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background-color: #ffffff;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .report-card input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.15);
+      outline: none;
+    }
+
+    .report-info-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    /* Kartu Ringkasan Statistik */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      padding: 20px 30px 6px 30px;
+    }
+
+    .summary-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--primary-blue);
+    }
+
+    .summary-card .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-card .value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary-blue);
+      margin-top: 4px;
+    }
+
+    /* Toolbar Filter & Tombol Download JPG */
+    .rekap-toolbar {
+      padding: 18px 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    select, input[type="search"], input[type="date"] {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background-color: #ffffff;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    select:focus, input[type="search"]:focus, input[type="date"]:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.15);
+    }
+
+    .btn {
+      padding: 9px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-blue);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #172554;
+    }
+
+    .btn-download-jpg {
+      background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(22, 163, 74, 0.25);
+    }
+
+    .btn-download-jpg:hover {
+      background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+    }
+
+    /* Tabel di Layar Web */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      padding: 0 0 20px 0;
+    }
+
+    table.rekap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.82rem;
+    }
+
+    table.rekap-table th,
+    table.rekap-table td {
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 9px 7px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    table.rekap-table thead th {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    table.rekap-table th.sticky-no,
+    table.rekap-table td.sticky-no {
+      position: sticky;
+      left: 0;
+      min-width: 44px;
+      max-width: 44px;
+      background-color: #ffffff;
+      z-index: 3;
+    }
+
+    table.rekap-table th.sticky-upt,
+    table.rekap-table td.sticky-upt {
+      position: sticky;
+      left: 44px;
+      min-width: 260px;
+      text-align: left;
+      padding-left: 14px;
+      padding-right: 14px;
+      background-color: #ffffff;
+      z-index: 3;
+      box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    table.rekap-table thead th.sticky-no,
+    table.rekap-table thead th.sticky-upt {
+      background-color: #cbd5e1;
+      z-index: 4;
+    }
+
+    table.rekap-table tbody tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    table.rekap-table tbody tr.total-row td {
+      background-color: #eff6ff;
+      font-weight: 800;
+      color: var(--primary-blue);
+    }
+
+    th.today-col {
+      background-color: #fef3c7 !important;
+      color: #b45309 !important;
+      border-bottom: 2px solid var(--accent-gold) !important;
+    }
+
+    td.today-col {
+      background-color: #fffbeb !important;
+    }
+
+    .check-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .col-date {
+      min-width: 28px;
+    }
+
+    .col-jumlah {
+      font-weight: 800;
+      font-size: 0.92rem;
+      background-color: #f8fafc;
+      min-width: 65px;
+    }
+
+    .badge-ket {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: capitalize;
+    }
+
+    .ket-sangat-baik { background-color: var(--success-bg); color: var(--success-text); }
+    .ket-baik { background-color: var(--info-bg); color: var(--info-text); }
+    .ket-sedang { background-color: var(--warn-bg); color: var(--warn-text); }
+    .ket-kurang { background-color: var(--danger-bg); color: var(--danger-text); }
+
+    .status-msg {
+      padding: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="rekap-wrapper" id="section-rekap-rinci-upt">
+  <!-- Header Resmi -->
+  <div class="rekap-header">
+    <div>
+      <div class="instansi-badge">KANTOR WILAYAH DITJENPAS KALIMANTAN TENGAH</div>
+      <h2>LAPORAN RESMI SITUASI &amp; REKAPITULASI PENGGELEDAHAN UPT</h2>
+      <div class="update-banner" id="banner-tanggal-update">
+        Laporan Situasi Wilayah Kalteng: Hari Minggu, 25 Oktober 2026 (1 x 24 Jam)
+      </div>
+    </div>
+    <div class="sync-badge">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span id="sync-status-text">Menunggu koneksi spreadsheet...</span>
+    </div>
+  </div>
+
+  <!-- Input Link Google Spreadsheet -->
+  <div class="config-bar">
+    <label for="input-sheet-url"><strong>Link / ID Spreadsheet:</strong></label>
+    <input
+      type="text"
+      id="input-sheet-url"
+      placeholder="Tempel link Google Spreadsheet Anda di sini (https://docs.google.com/spreadsheets/d/...)"
+    />
+    <button class="btn btn-primary" onclick="simpanDanSinkronkan()">Hubungkan &amp; Sinkronkan</button>
+  </div>
+
+  <!-- Panel Kustomisasi Mandiri Laporan Harian (WBP & Situasi Menonjol) -->
+  <div class="custom-report-container">
+    <div class="custom-report-title">
+      <span>📌</span> Kustomisasi Data Laporan Situasi 1 x 24 Jam (Akan Tercetak di File JPG)
+    </div>
+    <div class="custom-report-grid">
+      <div class="report-card">
+        <label for="input-custom-wbp">Jumlah WBP &amp; Tahanan &amp; Anak:</label>
+        <input type="text" id="input-custom-wbp" value="5.148 orang" />
+        <div class="report-info-text">Total UPT: 16 (Lapas: 7, Rutan: 4, LPKA: 1, Bapas: 4)</div>
+      </div>
+
+      <div class="report-card">
+        <label for="input-custom-situasi">Situasi Menonjol (1 x 24 Jam):</label>
+        <input type="text" id="input-custom-situasi" value="NIHIL" />
+        <div class="report-info-text">Ketik kondisi keamanan &amp; ketertiban wilayah.</div>
+      </div>
+
+      <div class="report-card">
+        <label for="input-custom-piket">Jumlah Petugas Piket Jaga:</label>
+        <input type="text" id="input-custom-piket" value="255 Orang (Lapas/Rutan/LPKA: 255, Bapas: -)" />
+        <div class="report-info-text">Rincian akumulasi petugas piket harian.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kartu Ringkasan -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="label">Total Satker UPT Terpantau</div>
+      <div class="value" id="stat-total-upt">12 UPT</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Total Penggeledahan Bulan Ini</div>
+      <div class="value" id="stat-total-giat">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Rata-Rata Giat / UPT</div>
+      <div class="value" id="stat-rata-upt">0 Kali</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Predikat Sangat Baik</div>
+      <div class="value" id="stat-sangat-baik">0 UPT</div>
+    </div>
+  </div>
+
+  <!-- Toolbar Kontrol, Filter, dan Tombol Download JPG -->
+  <div class="rekap-toolbar">
+    <div class="toolbar-group">
+      <label for="select-bulan"><strong>Bulan:</strong></label>
+      <select id="select-bulan" onchange="muatDataSpreadsheet()">
+        <option value="Januari 2026">Januari 2026</option>
+        <option value="Februari 2026">Februari 2026</option>
+        <option value="Maret 2026">Maret 2026</option>
+        <option value="April 2026">April 2026</option>
+        <option value="Mei 2026">Mei 2026</option>
+        <option value="Juni 2026">Juni 2026</option>
+        <option value="Juli 2026">Juli 2026</option>
+        <option value="Agustus 2026">Agustus 2026</option>
+        <option value="September 2026">September 2026</option>
+        <option value="Oktober 2026">Oktober 2026</option>
+        <option value="November 2026">November 2026</option>
+        <option value="Desember 2026">Desember 2026</option>
+        <option value="TOTAL 1 TAHUN">TOTAL 1 TAHUN (Rekap Tahunan)</option>
+      </select>
+
+      <label for="input-tanggal-update"><strong>Tanggal Laporan:</strong></label>
+      <input type="date" id="input-tanggal-update" onchange="saatTanggalUpdateBerubah()" />
+
+      <input
+        type="search"
+        id="search-upt"
+        placeholder="Cari Lapas / Rutan..."
+        oninput="terapkanFilterTabel()"
+      />
+
+      <select id="filter-ket" onchange="terapkanFilterTabel()">
+        <option value="SEMUA">Semua Keterangan</option>
+        <option value="sangat baik">Sangat Baik</option>
+        <option value="baik">Baik</option>
+        <option value="sedang">Sedang</option>
+        <option value="kurang">Kurang</option>
+      </select>
+    </div>
+
+    <div class="toolbar-group">
+      <label style="font-size: 0.82rem; color: var(--text-muted); display:flex; align-items:center; gap:5px;">
+        <input type="checkbox" id="toggle-autosync" checked onchange="aturIntervalSync()" />
+        Auto-Sync (30 dtk)
+      </label>
+      <button class="btn btn-outline" onclick="muatDataSpreadsheet()">
+        &#x21bb; Refresh Data
+      </button>
+      <button class="btn btn-download-jpg" onclick="downloadLaporanJPG()">
+        &#128247; Download Laporan Resmi (.JPG)
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabel Rekapitulasi Rinci UPT -->
+  <div class="table-container" id="kontainer-tabel-upt">
+    <div class="status-msg">
+      Silakan tempel link Google Spreadsheet Anda di bagian atas lalu klik <strong>Hubungkan &amp; Sinkronkan</strong>.
+    </div>
+  </div>
+</div>
+
+<script>
+  const DEFAULT_SPREADSHEET_URL = "";
+
+  const DAFTAR_UPT_DEFAULT = [
+    "Lapas Kelas IIA Palangka Raya",
+    "Lapas Kelas IIB Sampit",
+    "Lapas Kelas IIB Muara Teweh",
+    "Lapas Kelas IIB Pangkalan Bun",
+    "Lapas Narkotika Kelas IIA Kasongan",
+    "Lapas Perempuan Kelas IIA Palangka Raya",
+    "Lapas Khusus Anak Kelas II Palangka Raya",
+    "Lapas Kelas III Sukamara",
+    "Rutan Kelas IIA Palangka Raya",
+    "Rutan Kelas IIB Kuala Kapuas",
+    "Rutan Kelas IIB Buntok",
+    "Rutan Kelas IIB Tamiang Layang"
+  ];
+
+  const NAMA_BULAN_ID = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  const NAMA_HARI_ID = [
+    "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"
+  ];
+
+  let dataBarisMentah = [];
+  let modeTabelSaatIni = "BULANAN";
+  let timerAutoSync = null;
+
+  function dapatkanKalimatTanggalUpdate() {
+    const inputDate = document.getElementById("input-tanggal-update").value;
+    const tglObj = inputDate ? new Date(inputDate + "T00:00:00") : new Date();
+    const namaHari = NAMA_HARI_ID[tglObj.getDay()];
+    const tanggal = tglObj.getDate();
+    const namaBulan = NAMA_BULAN_ID[tglObj.getMonth()];
+    const tahun = tglObj.getFullYear();
+    return `Hari ${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
+  }
+
+  function dapatkanAngkaHariUpdate() {
+    const inputDate = document.getElementById("input-tanggal-update").value;
+    const tglObj = inputDate ? new Date(inputDate + "T00:00:00") : new Date();
+    return tglObj.getDate();
+  }
+
+  function perbaruiBannerTanggal() {
+    const kalimat = dapatkanKalimatTanggalUpdate();
+    document.getElementById("banner-tanggal-update").textContent =
+      `Laporan Situasi Wilayah Kalteng: ${kalimat} (1 x 24 Jam)`;
+  }
+
+  function saatTanggalUpdateBerubah() {
+    perbaruiBannerTanggal();
+    const inputDate = document.getElementById("input-tanggal-update").value;
+    if (inputDate) {
+      const tglObj = new Date(inputDate + "T00:00:00");
+      const opsiBulan = `${NAMA_BULAN_ID[tglObj.getMonth()]} 2026`;
+      const selectBulan = document.getElementById("select-bulan");
+      if (selectBulan.value !== "TOTAL 1 TAHUN" && selectBulan.value !== opsiBulan) {
+        selectBulan.value = opsiBulan;
+        muatDataSpreadsheet();
+        return;
+      }
+    }
+    terapkanFilterTabel();
+  }
+
+  function ekstrakSpreadsheetId(input) {
+    if (!input) return "";
+    const trimmed = input.trim();
+    const match = trimmed.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    if (match && match[1]) return match[1];
+    if (/^[a-zA-Z0-9-_]{20,}$/.test(trimmed)) return trimmed;
+    return "";
+  }
+
+  function simpanDanSinkronkan() {
+    const inputVal = document.getElementById("input-sheet-url").value.trim();
+    const sheetId = ekstrakSpreadsheetId(inputVal);
+    if (!sheetId) {
+      alert("Link Google Spreadsheet tidak valid. Pastikan Anda menempelkan link lengkap dari Google Spreadsheet.");
+      return;
+    }
+    localStorage.setItem("rekap_upt_sheet_url", inputVal);
+    muatDataSpreadsheet();
+  }
+
+  function hitungKeteranganOtomatis(jumlah, isTahunan = false) {
+    if (jumlah <= 0) return "-";
+    const ambang = isTahunan ? 12 : 1;
+    if (jumlah >= 8 * ambang) return "sangat baik";
+    if (jumlah >= 7 * ambang) return "baik";
+    if (jumlah >= 5 * ambang) return "sedang";
+    return "kurang";
+  }
+
+  function dapatkanKelasBadge(ket) {
+    const k = (ket || "").toString().toLowerCase().trim();
+    if (k.includes("sangat baik")) return "ket-sangat-baik";
+    if (k.includes("baik")) return "ket-baik";
+    if (k.includes("sedang")) return "ket-sedang";
+    if (k === "-" || k === "") return "";
+    return "ket-kurang";
+  }
+
+  function setStatusSinkronisasi(status, pesan) {
+    const dot = document.getElementById("sync-dot");
+    const text = document.getElementById("sync-status-text");
+    dot.className = "sync-dot " + (status === "loading" ? "loading" : status === "error" ? "error" : "");
+    text.textContent = pesan;
+  }
+
+  function bacaNilaiSel(cell) {
+    if (!cell) return "";
+    if (cell.f !== undefined && cell.f !== null && String(cell.f).trim() !== "") {
+      return String(cell.f).trim();
+    }
+    if (cell.v !== undefined && cell.v !== null) {
+      return String(cell.v).trim();
+    }
+    return "";
+  }
+
+  function adalahTeksKeterangan(teks) {
+    const t = (teks || "").toLowerCase().trim();
+    return t === "sangat baik" || t === "baik" || t === "sedang" || t === "kurang";
+  }
+
+  function muatDataSpreadsheet() {
+    const urlTersimpan = document.getElementById("input-sheet-url").value.trim()
+      || localStorage.getItem("rekap_upt_sheet_url")
+      || DEFAULT_SPREADSHEET_URL;
+
+    const sheetId = ekstrakSpreadsheetId(urlTersimpan);
+    if (!sheetId) {
+      setStatusSinkronisasi("error", "Link Spreadsheet belum diisi");
+      return;
+    }
+
+    const namaSheet = document.getElementById("select-bulan").value;
+    modeTabelSaatIni = (namaSheet === "TOTAL 1 TAHUN") ? "TAHUNAN" : "BULANAN";
+    const rentang = modeTabelSaatIni === "TAHUNAN" ? "A5:P16" : "A5:AI16";
+
+    setStatusSinkronisasi("loading", `Menyinkronkan "${namaSheet}"...`);
+
+    const scriptLama = document.getElementById("jsonp-gviz-script");
+    if (scriptLama) scriptLama.remove();
+
+    const namaCallback = "terimaDataSpreadsheetUPT";
+    window[namaCallback] = function(response) {
+      if (!response || response.status === "error" || !response.table) {
+        setStatusSinkronisasi("error", "Gagal membaca sheet (Cek izin akses Spreadsheet)");
+        return;
+      }
+
+      prosesDataSpreadsheet(response.table.rows, namaSheet);
+      const waktu = new Date().toLocaleTimeString("id-ID");
+      setStatusSinkronisasi("ok", `Tersinkronisasi otomatis • ${waktu}`);
+    };
+
+    const script = document.createElement("script");
+    script.id = "jsonp-gviz-script";
+    script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:${namaCallback}&headers=0&sheet=${encodeURIComponent(namaSheet)}&range=${rentang}&_ts=${Date.now()}`;
+    script.onerror = function() {
+      setStatusSinkronisasi("error", "Gagal memuat. Pastikan akses Spreadsheet: 'Siapa saja yang memiliki link'");
+    };
+    document.body.appendChild(script);
+  }
+
+  function prosesDataSpreadsheet(rows, namaSheet) {
+    dataBarisMentah = [];
+    const isBulan30Hari = /september|november/i.test(namaSheet);
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].c;
+      if (!cells) continue;
+
+      const rawNo = bacaNilaiSel(cells[0]);
+      const rawNama = bacaNilaiSel(cells[1]);
+
+      const nomorUPT = parseInt(rawNo, 10) || (i + 1);
+      if (nomorUPT < 1 || nomorUPT > 12) continue;
+
+      const namaUPT = rawNama || DAFTAR_UPT_DEFAULT[nomorUPT - 1] || `UPT ${nomorUPT}`;
+
+      if (modeTabelSaatIni === "BULANAN") {
+        let idxJumlah = 33;
+        let idxKet = 34;
+        let batasKolomTanggal = 32;
+
+        const teksKolom33 = bacaNilaiSel(cells[33]);
+        const teksKolom34 = bacaNilaiSel(cells[34]);
+
+        if (adalahTeksKeterangan(teksKolom33) || (isBulan30Hari && cells.length <= 34 && teksKolom34 === "")) {
+          idxJumlah = 32;
+          idxKet = 33;
+          batasKolomTanggal = 31;
+        }
+
+        const tanggalList = [];
+        let hitungCentang = 0;
+        let akumulasiAngkaDiTanggal = 0;
+
+        for (let col = 2; col <= batasKolomTanggal; col++) {
+          const isi = bacaNilaiSel(cells[col]);
+          const angkaIsi = Number(isi);
+
+          const adaSimbolCentang = isi !== "" && (
+            isi.includes("√") ||
+            isi.includes("✓") ||
+            isi.includes("✔") ||
+            isi.toLowerCase() === "v" ||
+            isi.toLowerCase() === "x" ||
+            angkaIsi === 1
+          );
+
+          if (adaSimbolCentang) {
+            hitungCentang++;
+            tanggalList.push("√");
+          } else if (!isNaN(angkaIsi) && angkaIsi > 1) {
+            akumulasiAngkaDiTanggal += angkaIsi;
+            hitungCentang++;
+            tanggalList.push("√");
+          } else {
+            tanggalList.push("");
+          }
+        }
+
+        while (tanggalList.length < 31) {
+          tanggalList.push("");
+        }
+
+        const rawJumlah = bacaNilaiSel(cells[idxJumlah]);
+        const parsedJumlah = rawJumlah !== "" ? Number(rawJumlah) : NaN;
+
+        let jumlahFinal = !isNaN(parsedJumlah)
+          ? parsedJumlah
+          : (akumulasiAngkaDiTanggal > hitungCentang ? akumulasiAngkaDiTanggal : hitungCentang);
+
+        if (jumlahFinal > hitungCentang) {
+          let kurangnya = Math.min(jumlahFinal, 31) - hitungCentang;
+          const langkah = Math.max(1, Math.floor(28 / Math.max(1, jumlahFinal)));
+          for (let pos = 0; pos < 31 && kurangnya > 0; pos += langkah) {
+            if (tanggalList[pos] !== "√") {
+              tanggalList[pos] = "√";
+              kurangnya--;
+            }
+          }
+          for (let pos = 0; pos < 31 && kurangnya > 0; pos++) {
+            if (tanggalList[pos] !== "√") {
+              tanggalList[pos] = "√";
+              kurangnya--;
+            }
+          }
+        }
+
+        const rawKet = bacaNilaiSel(cells[idxKet]);
+        const ketFinal = rawKet !== ""
+          ? rawKet
+          : hitungKeteranganOtomatis(jumlahFinal, false);
+
+        dataBarisMentah.push({
+          no: nomorUPT,
+          nama: namaUPT,
+          detail: tanggalList,
+          jumlah: jumlahFinal,
+          keterangan: ketFinal
+        });
+
+      } else {
+        const bulanList = [];
+        let akumulasiTahunan = 0;
+
+        for (let col = 2; col <= 13; col++) {
+          const rawVal = bacaNilaiSel(cells[col]);
+          const val = rawVal !== "" ? Number(rawVal) : 0;
+          const angka = isNaN(val) ? 0 : val;
+          akumulasiTahunan += angka;
+          bulanList.push(angka);
+        }
+
+        const rawTotal = bacaNilaiSel(cells[14]);
+        const totalSheet = rawTotal !== "" ? Number(rawTotal) : akumulasiTahunan;
+        const jumlahFinal = isNaN(totalSheet) || totalSheet === 0 ? akumulasiTahunan : totalSheet;
+
+        const rawKet = bacaNilaiSel(cells[15]);
+        const ketFinal = rawKet !== ""
+          ? rawKet
+          : hitungKeteranganOtomatis(jumlahFinal, true);
+
+        dataBarisMentah.push({
+          no: nomorUPT,
+          nama: namaUPT,
+          detail: bulanList,
+          jumlah: jumlahFinal,
+          keterangan: ketFinal
+        });
+      }
+    }
+
+    perbaruiRingkasan(dataBarisMentah);
+    terapkanFilterTabel();
+  }
+
+  function perbaruiRingkasan(data) {
+    const totalUPT = data.length;
+    const totalGiat = data.reduce((acc, item) => acc + (Number(item.jumlah) || 0), 0);
+    const rataRata = totalUPT > 0 ? (totalGiat / totalUPT).toFixed(1) : 0;
+    const sangatBaik = data.filter(item => item.keterangan.toLowerCase().includes("sangat baik")).length;
+
+    document.getElementById("stat-total-upt").textContent = totalUPT + " UPT";
+    document.getElementById("stat-total-giat").textContent = totalGiat;
+    document.getElementById("stat-rata-upt").textContent = rataRata + " Kali";
+    document.getElementById("stat-sangat-baik").textContent = sangatBaik + " UPT";
+  }
+
+  function dapatkanDataTerfilter() {
+    const kataKunci = document.getElementById("search-upt").value.toLowerCase().trim();
+    const filterKet = document.getElementById("filter-ket").value.toLowerCase();
+
+    return dataBarisMentah.filter(item => {
+      const cocokNama = item.nama.toLowerCase().includes(kataKunci);
+      const cocokKet = filterKet === "semua" || item.keterangan.toLowerCase().trim() === filterKet;
+      return cocokNama && cocokKet;
+    });
+  }
+
+  function terapkanFilterTabel() {
+    const dataTerfilter = dapatkanDataTerfilter();
+    const namaSheet = document.getElementById("select-bulan").value;
+    const hariAktif = dapatkanAngkaHariUpdate();
+
+    const kontainer = document.getElementById("kontainer-tabel-upt");
+    if (dataTerfilter.length === 0) {
+      kontainer.innerHTML = `<div class="status-msg">Tidak ada data UPT yang sesuai dengan filter pencarian.</div>`;
+      return;
+    }
+
+    let html = `<table class="rekap-table"><thead>`;
+
+    if (modeTabelSaatIni === "BULANAN") {
+      html += `
+        <tr>
+          <th rowspan="2" class="sticky-no">No</th>
+          <th rowspan="2" class="sticky-upt">Nama UPT</th>
+          <th colspan="31">Tanggal Pelaksanaan Penggeledahan (${namaSheet})</th>
+          <th rowspan="2">Jumlah</th>
+          <th rowspan="2">Keterangan</th>
+        </tr>
+        <tr>`;
+      for (let t = 1; t <= 31; t++) {
+        const clsToday = (t === hariAktif) ? "col-date today-col" : "col-date";
+        html += `<th class="${clsToday}">${t}</th>`;
+      }
+      html += `</tr></thead><tbody>`;
+    } else {
+      const labelBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+      html += `
+        <tr>
+          <th rowspan="2" class="sticky-no">No</th>
+          <th rowspan="2" class="sticky-upt">Nama UPT</th>
+          <th colspan="12">Rekapitulasi Bulanan (Tahun 2026)</th>
+          <th rowspan="2">Total 1 Tahun</th>
+          <th rowspan="2">Keterangan</th>
+        </tr>
+        <tr>`;
+      labelBulan.forEach(b => {
+        html += `<th class="col-date">${b}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+    }
+
+    let grandTotal = 0;
+
+    dataTerfilter.forEach(item => {
+      grandTotal += Number(item.jumlah) || 0;
+      const kelasBadge = dapatkanKelasBadge(item.keterangan);
+
+      html += `<tr>
+        <td class="sticky-no">${item.no}</td>
+        <td class="sticky-upt"><strong>${item.nama}</strong></td>`;
+
+      item.detail.forEach((val, idx) => {
+        const clsToday = (modeTabelSaatIni === "BULANAN" && (idx + 1) === hariAktif) ? "today-col" : "";
+        if (val === "√") {
+          html += `<td class="${clsToday}"><span class="check-mark">&#10003;</span></td>`;
+        } else {
+          html += `<td class="${clsToday}">${val !== "" ? val : "-"}</td>`;
+        }
+      });
+
+      html += `
+        <td class="col-jumlah">${item.jumlah}</td>
+        <td>${kelasBadge ? `<span class="badge-ket ${kelasBadge}">${item.keterangan}</span>` : "-"}</td>
+      </tr>`;
+    });
+
+    const colSpanDetail = modeTabelSaatIni === "BULANAN" ? 31 : 12;
+    html += `
+      <tr class="total-row">
+        <td class="sticky-no"></td>
+        <td class="sticky-upt">TOTAL PELAKSANAAN</td>
+        <td colspan="${colSpanDetail}" style="text-align:right; padding-right:16px;">Total Keseluruhan (${namaSheet}):</td>
+        <td class="col-jumlah">${grandTotal}</td>
+        <td>-</td>
+      </tr>
+    </tbody></table>`;
+
+    kontainer.innerHTML = html;
+  }
+
+  /**
+   * GENERATOR GAMBAR LAPORAN RESMI (.JPG) DENGAN DESAIN MENONJOL & PROFESIONAL
+   */
+  function downloadLaporanJPG() {
+    const dataRender = dapatkanDataTerfilter();
+    if (!dataRender || dataRender.length === 0) {
+      alert("Data tabel belum dimuat. Pastikan Spreadsheet sudah terhubung.");
+      return;
+    }
+
+    const namaSheet = document.getElementById("select-bulan").value;
+    const kalimatTanggal = dapatkanKalimatTanggalUpdate();
+    const hariAktif = dapatkanAngkaHariUpdate();
+    const isBulanan = (modeTabelSaatIni === "BULANAN");
+    const jmlKolomDetail = isBulanan ? 31 : 12;
+
+    const valWBP = document.getElementById("input-custom-wbp").value;
+    const valSituasi = document.getElementById("input-custom-situasi").value;
+    const valPiket = document.getElementById("input-custom-piket").value;
+
+    const padX = 36;
+    const padY = 32;
+    const wNo = 44;
+    const wNama = 300;
+    const wDetail = isBulanan ? 34 : 68;
+    const wJumlah = 84;
+    const wKet = 136;
+
+    const tableWidth = wNo + wNama + (jmlKolomDetail * wDetail) + wJumlah + wKet;
+    const totalWidth = tableWidth + (padX * 2);
+
+    const headerBannerHeight = 124;
+    const reportBoxHeight = 145;
+    const summaryHeight = 78;
+    const tableHeadH1 = 36;
+    const tableHeadH2 = 32;
+    const rowHeight = 40;
+    const totalRowHeight = 44;
+    const footerHeight = 48;
+
+    const totalHeight = padY + headerBannerHeight + 16 + reportBoxHeight + 16 +
+                        summaryHeight + 18 + tableHeadH1 + tableHeadH2 +
+                        (dataRender.length * rowHeight) + totalRowHeight + footerHeight + padY;
+
+    const scale = 2;
+    const canvas = document.createElement("canvas");
+    canvas.width = totalWidth * scale;
+    canvas.height = totalHeight * scale;
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+
+    // 1. Latar Belakang Putih Bersih
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, totalWidth, totalHeight);
+
+    // 2. Header Banner Kanwil Ditjenpas Kalteng (Formal & Berwibawa)
+    const grad = ctx.createLinearGradient(padX, padY, padX + tableWidth, padY + headerBannerHeight);
+    grad.addColorStop(0, "#090d16");
+    grad.addColorStop(1, "#1e3a8a");
+    ctx.fillStyle = grad;
+    gambarKotakRounded(ctx, padX, padY, tableWidth, headerBannerHeight, 12, true, false);
+
+    ctx.fillStyle = "#d97706"; // Aksen Emas
+    ctx.fillRect(padX, padY + headerBannerHeight - 6, tableWidth, 6);
+
+    ctx.fillStyle = "#fde68a";
+    ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("KANTOR WILAYAH DIREKTORAT JENDERAL PEMASYARAKATAN KALIMANTAN TENGAH", padX + 26, padY + 30);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(`LAPORAN RESMI SITUASI & REKAPITULASI UPT (${namaSheet.toUpperCase()})`, padX + 26, padY + 62);
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+    gambarKotakRounded(ctx, padX + 26, padY + 76, 540, 32, 6, true, false);
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "bold 14px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(`Update Wilayah: ${kalimatTanggal} (1 x 24 Jam)`, padX + 38, padY + 97);
+
+    const waktuCetak = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "12px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(`Periode: ${namaSheet}`, padX + tableWidth - 26, padY + 50);
+    ctx.fillText(`Dicetak: ${kalimatTanggal} • ${waktuCetak} WIB`, padX + tableWidth - 26, padY + 72);
+
+    // 3. Kotak Panel Laporan Situasi 1 x 24 Jam (Desain Menonjol)
+    const yReportBox = padY + headerBannerHeight + 16;
+    ctx.fillStyle = "#f8fafc";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.5;
+    gambarKotakRounded(ctx, padX, yReportBox, tableWidth, reportBoxHeight, 10, true, true);
+
+    // Garis aksen biru di kiri kotak laporan
+    ctx.fillStyle = "#1e3a8a";
+    ctx.fillRect(padX, yReportBox, 6, reportBoxHeight);
+
+    ctx.fillStyle = "#1e3a8a";
+    ctx.font = "bold 14px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("📌  RINGKASAN SITUASI KONDISI WILAYAH KALIMANTAN TENGAH (1 x 24 JAM) :", padX + 24, yReportBox + 28);
+
+    ctx.fillStyle = "#334155";
+    ctx.font = "13px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(`• Jumlah UPT Pemasyarakatan     : 16 UPT (Lapas: 7, Rutan: 4, LPKA: 1, Bapas: 4)`, padX + 24, yReportBox + 60);
+    ctx.fillText(`• Jumlah WBP & Tahanan & Anak    : ${valWBP}`, padX + 24, yReportBox + 88);
+    ctx.fillText(`• Situasi Keamanan / Menonjol   : ${valSituasi}`, padX + 24, yReportBox + 116);
+    
+    ctx.fillText(`• Jumlah Petugas Piket Jaga       : ${valPiket}`, padX + tableWidth / 2 + 20, yReportBox + 60);
+
+    // 4. Kartu Ringkasan Statistik
+    const ySummary = yReportBox + reportBoxHeight + 16;
+    const totalUPT = dataRender.length;
+    const totalGiat = dataRender.reduce((acc, item) => acc + (Number(item.jumlah) || 0), 0);
+    const rataRata = totalUPT > 0 ? (totalGiat / totalUPT).toFixed(1) : 0;
+    const sangatBaik = dataRender.filter(item => item.keterangan.toLowerCase().includes("sangat baik")).length;
+
+    const cards = [
+      { label: "TOTAL SATKER UPT", val: `${totalUPT} UPT Terpantau` },
+      { label: `TOTAL PENGGELEDAHAN (${namaSheet.toUpperCase()})`, val: `${totalGiat} Kegiatan` },
+      { label: "RATA-RATA / UPT", val: `${rataRata} Kali` },
+      { label: "PREDIKAT SANGAT BAIK", val: `${sangatBaik} dari ${totalUPT} UPT` }
+    ];
+
+    const gapCard = 16;
+    const cardW = (tableWidth - (gapCard * 3)) / 4;
+
+    cards.forEach((c, idx) => {
+      const cx = padX + idx * (cardW + gapCard);
+      ctx.fillStyle = "#f8fafc";
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 1;
+      gambarKotakRounded(ctx, cx, ySummary, cardW, summaryHeight, 8, true, true);
+
+      // Garis atas kartu
+      ctx.fillStyle = "#1e3a8a";
+      ctx.fillRect(cx, ySummary, cardW, 4);
+
+      ctx.fillStyle = "#64748b";
+      ctx.font = "bold 11px 'Segoe UI', Arial, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(c.label, cx + 16, ySummary + 28);
+
+      ctx.fillStyle = "#1e3a8a";
+      ctx.font = "bold 19px 'Segoe UI', Arial, sans-serif";
+      ctx.fillText(c.val, cx + 16, ySummary + 58);
+    });
+
+    // 5. Header Tabel Rekapitulasi Rinci UPT
+    const yTableStart = ySummary + summaryHeight + 18;
+    const xNo = padX;
+    const xNama = xNo + wNo;
+    const xDetailStart = xNama + wNama;
+    const xJumlah = xDetailStart + (jmlKolomDetail * wDetail);
+    const xKet = xJumlah + wJumlah;
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillRect(padX, yTableStart, tableWidth, tableHeadH1 + tableHeadH2);
+
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 1;
+
+    ctx.strokeRect(xNo, yTableStart, wNo, tableHeadH1 + tableHeadH2);
+    ctx.strokeRect(xNama, yTableStart, wNama, tableHeadH1 + tableHeadH2);
+    ctx.strokeRect(xDetailStart, yTableStart, jmlKolomDetail * wDetail, tableHeadH1);
+    ctx.strokeRect(xJumlah, yTableStart, wJumlah, tableHeadH1 + tableHeadH2);
+    ctx.strokeRect(xKet, yTableStart, wKet, tableHeadH1 + tableHeadH2);
+
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("No", xNo + wNo / 2, yTableStart + 42);
+    ctx.fillText("Nama UPT Pemasyarakatan", xNama + wNama / 2, yTableStart + 42);
+    ctx.fillText(
+      isBulanan ? `Tanggal Pelaksanaan Penggeledahan (${namaSheet})` : "Rekapitulasi Bulanan (Tahun 2026)",
+      xDetailStart + (jmlKolomDetail * wDetail) / 2,
+      yTableStart + 23
+    );
+    ctx.fillText(isBulanan ? "Jumlah" : "Total", xJumlah + wJumlah / 2, yTableStart + 42);
+    ctx.fillText("Keterangan", xKet + wKet / 2, yTableStart + 42);
+
+    const labelBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    const yHead2 = yTableStart + tableHeadH1;
+
+    for (let d = 0; d < jmlKolomDetail; d++) {
+      const xd = xDetailStart + (d * wDetail);
+      const isHariIni = isBulanan && ((d + 1) === hariAktif);
+
+      if (isHariIni) {
+        ctx.fillStyle = "#fef3c7";
+        ctx.fillRect(xd, yHead2, wDetail, tableHeadH2);
+      }
+
+      ctx.strokeRect(xd, yHead2, wDetail, tableHeadH2);
+      ctx.fillStyle = isHariIni ? "#b45309" : "#0f172a";
+      ctx.font = "bold 12px 'Segoe UI', Arial, sans-serif";
+      const label = isBulanan ? String(d + 1) : labelBulan[d];
+      ctx.fillText(label, xd + wDetail / 2, yHead2 + 21);
+    }
+
+    // 6. Baris Data UPT
+    let yRow = yHead2 + tableHeadH2;
+    let grandTotal = 0;
+
+    dataRender.forEach((item, rIdx) => {
+      grandTotal += Number(item.jumlah) || 0;
+
+      ctx.fillStyle = (rIdx % 2 === 0) ? "#ffffff" : "#f8fafc";
+      ctx.fillRect(padX, yRow, tableWidth, rowHeight);
+
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 1;
+
+      ctx.strokeRect(xNo, yRow, wNo, rowHeight);
+      ctx.fillStyle = "#334155";
+      ctx.font = "13px 'Segoe UI', Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(String(item.no), xNo + wNo / 2, yRow + 25);
+
+      ctx.strokeRect(xNama, yRow, wNama, rowHeight);
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(item.nama, xNama + 14, yRow + 25);
+
+      for (let d = 0; d < jmlKolomDetail; d++) {
+        const xd = xDetailStart + (d * wDetail);
+        const val = item.detail[d] !== undefined ? item.detail[d] : "";
+        const isHariIni = isBulanan && ((d + 1) === hariAktif);
+
+        if (isHariIni) {
+          ctx.fillStyle = "#fffbeb";
+          ctx.fillRect(xd, yRow, wDetail, rowHeight);
+        }
+
+        ctx.strokeRect(xd, yRow, wDetail, rowHeight);
+
+        if (val === "√") {
+          ctx.fillStyle = "#dcfce7";
+          gambarKotakRounded(ctx, xd + (wDetail - 22) / 2, yRow + (rowHeight - 22) / 2, 22, 22, 5, true, false);
+          ctx.fillStyle = "#15803d";
+          ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("✓", xd + wDetail / 2, yRow + 25);
+        } else {
+          ctx.fillStyle = "#94a3b8";
+          ctx.font = "12px 'Segoe UI', Arial, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(val !== "" ? String(val) : "-", xd + wDetail / 2, yRow + 25);
+        }
+      }
+
+      ctx.fillStyle = "#f1f5f9";
+      ctx.fillRect(xJumlah, yRow, wJumlah, rowHeight);
+      ctx.strokeRect(xJumlah, yRow, wJumlah, rowHeight);
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "bold 14px 'Segoe UI', Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(String(item.jumlah), xJumlah + wJumlah / 2, yRow + 25);
+
+      ctx.strokeRect(xKet, yRow, wKet, rowHeight);
+      const ketLower = (item.keterangan || "").toLowerCase().trim();
+      if (ketLower && ketLower !== "-") {
+        let bgBadge = "#fee2e2", txtBadge = "#b91c1c";
+        if (ketLower.includes("sangat baik")) { bgBadge = "#dcfce7"; txtBadge = "#15803d"; }
+        else if (ketLower.includes("baik")) { bgBadge = "#dbeafe"; txtBadge = "#1d4ed8"; }
+        else if (ketLower.includes("sedang")) { bgBadge = "#fef3c7"; txtBadge = "#b45309"; }
+
+        ctx.fillStyle = bgBadge;
+        gambarKotakRounded(ctx, xKet + 14, yRow + 7, wKet - 28, rowHeight - 14, 12, true, false);
+        ctx.fillStyle = txtBadge;
+        ctx.font = "bold 12px 'Segoe UI', Arial, sans-serif";
+        ctx.textAlign = "center";
+        const labelKet = item.keterangan.replace(/\b\w/g, c => c.toUpperCase());
+        ctx.fillText(labelKet, xKet + wKet / 2, yRow + 24);
+      } else {
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "13px 'Segoe UI', Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("-", xKet + wKet / 2, yRow + 25);
+      }
+
+      yRow += rowHeight;
+    });
+
+    // 7. Baris Total Keseluruhan
+    ctx.fillStyle = "#eff6ff";
+    ctx.fillRect(padX, yRow, tableWidth, totalRowHeight);
+    ctx.strokeStyle = "#94a3b8";
+    ctx.strokeRect(xNo, yRow, wNo + wNama + (jmlKolomDetail * wDetail), totalRowHeight);
+    ctx.strokeRect(xJumlah, yRow, wJumlah, totalRowHeight);
+    ctx.strokeRect(xKet, yRow, wKet, totalRowHeight);
+
+    ctx.fillStyle = "#1e3a8a";
+    ctx.font = "bold 14px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("TOTAL PELAKSANAAN KESELURUHAN", xNama + 14, yRow + 27);
+
+    ctx.textAlign = "right";
+    ctx.fillText(`Total Bulan ${namaSheet}:`, xJumlah - 16, yRow + 27);
+
+    ctx.font = "bold 16px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(String(grandTotal), xJumlah + wJumlah / 2, yRow + 28);
+    ctx.fillText("-", xKet + wKet / 2, yRow + 27);
+
+    // 8. Footer Gambar
+    const yFooter = yRow + totalRowHeight + 28;
+    ctx.fillStyle = "#64748b";
+    ctx.font = "12px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(
+      "Sumber Data: Dokumen Resmi Sistem Pelaporan Kanwil Ditjenpas Kalimantan Tengah",
+      padX,
+      yFooter
+    );
+    ctx.textAlign = "right";
+    ctx.fillText(
+      `Status Validasi: Terverifikasi (${kalimatTanggal})`,
+      padX + tableWidth,
+      yFooter
+    );
+
+    // 9. Download File .JPG
+    const namaFileBersih = `Laporan_Resmi_Kanwil_Ditjenpas_Kalteng_${kalimatTanggal.replace(/[, ]+/g, "_")}.jpg`;
+    const dataUrlJPG = canvas.toDataURL("image/jpeg", 0.96);
+
+    const linkDownload = document.createElement("a");
+    linkDownload.href = dataUrlJPG;
+    linkDownload.download = namaFileBersih;
+    document.body.appendChild(linkDownload);
+    linkDownload.click();
+    document.body.removeChild(linkDownload);
+  }
+
+  function gambarKotakRounded(ctx, x, y, width, height, radius, fill, stroke) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }
+
+  function aturIntervalSync() {
+    if (timerAutoSync) clearInterval(timerAutoSync);
+    const aktif = document.getElementById("toggle-autosync").checked;
+    if (aktif) {
+      timerAutoSync = setInterval(() => {
+        muatDataSpreadsheet();
+      }, 30000);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const hariIni = new Date();
+    const yyyy = hariIni.getFullYear();
+    const mm = String(hariIni.getMonth() + 1).padStart(2, "0");
+    const dd = String(hariIni.getDate()).padStart(2, "0");
+
+    document.getElementById("input-tanggal-update").value = `${yyyy}-${mm}-${dd}`;
+    perbaruiBannerTanggal();
+
+    const namaBulanSekarang = `${NAMA_BULAN_ID[hariIni.getMonth()]} 2026`;
+    const selectBulan = document.getElementById("select-bulan");
+    for (let i = 0; i < selectBulan.options.length; i++) {
+      if (selectBulan.options[i].value === namaBulanSekarang) {
+        selectBulan.selectedIndex = i;
+        break;
+      }
+    }
+
+    const savedUrl = localStorage.getItem("rekap_upt_sheet_url") || DEFAULT_SPREADSHEET_URL;
+    if (savedUrl) {
+      document.getElementById("input-sheet-url").value = savedUrl;
+      muatDataSpreadsheet();
+    }
+    aturIntervalSync();
+  });
+</script>
+
+</body>
+</html>
